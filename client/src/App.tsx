@@ -4,8 +4,20 @@ import { Link, Route, Routes } from "react-router-dom";
 import { RequireAuth } from "./contexts/Auth/RequireAuth";
 import { Home } from "./pages/Home";
 import { Private } from "./pages/Private";
+import { useContext } from "react";
+import { AuthContext } from "./contexts/Auth/AuthContext";
 
 function App() {
+  const auth = useContext(AuthContext);
+  // const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await auth.signout();
+    // navigate("/");
+    // eslint-disable-next-line no-self-assign
+    window.location.href = window.location.href;
+  };
+
   return (
     <div className="App">
       <header>
@@ -13,6 +25,7 @@ function App() {
         <nav>
           <Link to={"/"}>Home</Link>
           <Link to={"/private"}>Página Privada</Link>
+          {auth.user && <button onClick={handleLogout}>Sair</button>}
         </nav>
       </header>
       <hr />
@@ -26,7 +39,6 @@ function App() {
             </RequireAuth>
           }
         />
-        {/* <Route path="/contact" element={<Contact />} /> */}
       </Routes>
     </div>
   );
